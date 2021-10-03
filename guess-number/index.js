@@ -14,10 +14,22 @@ console.log(randomNum);
 
 $(".check").click(function (e) { 
   e.preventDefault();
-  let guessNum = Number($(".guess").val())
-  let message = checkNum(guessNum, randomNum)[0]
-  let checkWin= checkNum(guessNum, randomNum)[1]
-  console.log(checkNum(guessNum, randomNum))
+  hitAnswer()
+});
+
+$(document).keypress(function (e) { 
+  if ($(".number").html() != "?") {
+    startOver()
+  } else
+  if (e.key == "Enter") {
+    hitAnswer()
+  }
+});
+
+function hitAnswer() { 
+  let message = checkNum(randomNum)[0]
+  let checkWin= checkNum(randomNum)[1]
+  console.log(checkNum(randomNum))
   $(".message").text(message)
   if (checkWin) {
     winChange()
@@ -28,7 +40,7 @@ $(".check").click(function (e) {
     score -= 1
     $(".score").text(score)
   }
-});
+ }
 
 function startOver() {
   randomNum = Math.floor(Math.random()*20 + 1)
@@ -40,17 +52,23 @@ function startOver() {
   $(".number").html("?")
 }
 
-function checkNum(guess, key) {
+function checkNum(key) {
   let mes
   let correction = false
-  if (guess < key) {
-    mes = "Too low"
-  } else if (guess > key) {
-    mes = "Too high"
+  let guess = $(".guess").val()
+  if (guess != 0) {
+    if (guess < key) {
+      mes = "Too low"
+    } else if (guess > key) {
+      mes = "Too high"
+    } else {
+      mes = "Correct!"
+      correction = true
+    }
   } else {
-    mes = "Correct!"
-    correction = true
+    mes = "Not a sufficient number"
   }
+  
   return [mes, correction]
 }
 
